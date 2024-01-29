@@ -10,5 +10,9 @@
     "satori": "^0.10.11",
     "satori-html": "^0.3.2",
     "sharp": "^0.32.6"
+  },
+  "scripts": {
+    "deploy": "netlify deploy --prod",
+    "dev": "netlify dev"
   }
 }

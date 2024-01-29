@@ -4,10 +4,10 @@ import { html } from "satori-html";
 
 export default async (req, context) => {
     const url = new URL(req.url);
-    const count = url.searchParams.get('count') || 0;
+    const preference = url.searchParams.get('preference') || -1;
 
     const host = process.env.URL;
-    const htmlResponse = await fetch(`${host}/frame?count=${count}`);
+    const htmlResponse = await fetch(`${host}/rps-frame?preference=${preference}`);
     const markup = await htmlResponse.text();
 
     const font = {
@@ -18,19 +18,19 @@ export default async (req, context) => {
     const fontData = await fontResponse.arrayBuffer();
 
     const svg = await satori(
-    html(markup), 
-    {
-        width: 1200,
-        height: 800,
-        fonts: [
-            {
-                name: font.cssName,
-                data: fontData,
-                weight: 400,
-                style: "normal",
-            },
-        ],
-    });
+        html(markup),
+        {
+            width: 1200,
+            height: 800,
+            fonts: [
+                {
+                    name: font.cssName,
+                    data: fontData,
+                    weight: 400,
+                    style: "normal",
+                },
+            ],
+        });
     const svgBuffer = Buffer.from(svg);
     const png = sharp(svgBuffer).png();
     const response = await png.toBuffer();
@@ -44,5 +44,5 @@ export default async (req, context) => {
 }
 
 export const config = {
-    path: "/og-image"
+    path: "/rps-image"
 };
