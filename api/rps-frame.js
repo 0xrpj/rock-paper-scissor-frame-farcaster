@@ -1,14 +1,14 @@
+import { rando } from '@nastyox/rando.js';
+
 export default async (req, context) => {
     const url = new URL(req.url);
     const preference = Number(url.searchParams.get('preference'));
 
     function getUserChoice() {
-        let textToShow = '';
-        const randomNumber = Math.floor(Math.random() * 3);
+        let textToShow = "Select Rock, Paper or Scissor!";
+        const randomNumber = rando(0, 2);
 
-        if (preference === -1) {
-            textToShow = "Select Rock, Paper or Scissor!"
-        } else if (preference === 0 && randomNumber === 0) {
+        if (preference === 0 && randomNumber === 0) {
             textToShow = "We Tied! I chose Rock as well!";
         }
         else if (preference === 1 && randomNumber === 1) {
@@ -35,6 +35,8 @@ export default async (req, context) => {
         else if (preference === 2 && randomNumber === 1) {
             textToShow = "You Won! I chose Paper.";
         }
+
+        console.log({ textToShow })
 
         return textToShow;
     }

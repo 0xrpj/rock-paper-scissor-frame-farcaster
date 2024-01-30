@@ -1,12 +1,28 @@
 export default async (req, context) => {
     const host = process.env.URL;
 
-    const body = await new Response(req.body).json();
-    const buttonIndex = body.untrustedData.buttonIndex;
+    let buttonIndex = 0;
 
-   
-    // Update imagePath based on the new preference value
-    const imagePath = `${host}/rps-image?preference=${parseInt(buttonIndex)}`;
+    try {
+        const body = await new Response(req.body).json();
+        buttonIndex = body.untrustedData.buttonIndex;
+    } catch (e) { }
+
+    //hacky way to disable netlify caching behaviours! PR are welcome!
+    function generateRandomString() {
+        let result = '';
+        const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+        const charactersLength = characters.length;
+
+        for (let i = 0; i < 500; i++) {
+            const randomIndex = Math.floor(Math.random() * charactersLength);
+            result += characters.charAt(randomIndex);
+        }
+
+        return result;
+    }
+
+    const imagePath = `${host}/rps-image?preference=${parseInt(buttonIndex - 1)}&randomStr=${generateRandomString()}`;
 
     const html = `
         <!doctype html>
@@ -35,10 +51,6 @@ export default async (req, context) => {
             <figure>
             <img width="600" src="${imagePath}" />
             </figure>
-            <!-- Form for POST request -->
-            <form action="/" method="POST">
-                <input type="submit" value=":)" />
-            </form>
         </body>
         </html>
     `;
