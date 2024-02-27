@@ -1,14 +1,18 @@
+import getCastInfo from "../utils/getCastInfo"
+
 export default async (req, context) => {
     const host = process.env.URL;
 
     let buttonIndex = 0;
+    let address = null;
 
     try {
-        const body = await new Response(req.body).json();
-        buttonIndex = body.untrustedData.buttonIndex;
+        const body = await new Response(req.body).json()
+        buttonIndex = body.untrustedData.buttonIndex
+        address = (await getCastInfo(body.trustedData.messageBytes)).address
     } catch (e) { }
 
-    //hacky way to disable netlify caching behaviours! PR are welcome!
+    //hacky way to disable netlify caching behaviours! PRs are welcome!
     function generateRandomString() {
         let result = '';
         const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
@@ -22,7 +26,7 @@ export default async (req, context) => {
         return result;
     }
 
-    const imagePath = `${host}/rps-image?preference=${parseInt(buttonIndex - 1)}&randomStr=${generateRandomString()}`;
+    const imagePath = `${host}/rps-image?preference=${parseInt(buttonIndex - 1)}&randomStr=${generateRandomString()}&address=${address}`;
 
     const html = `
         <!doctype html>

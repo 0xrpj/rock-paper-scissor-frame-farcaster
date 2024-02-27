@@ -7,7 +7,7 @@ export default async (req, context) => {
     const preference = url.searchParams.get('preference') || -1;
 
     const host = process.env.URL;
-    const htmlResponse = await fetch(`${host}/rps-frame?preference=${preference}`);
+    const htmlResponse = await fetch(`${host}/rps-frame?preference=${preference}&address=${url.searchParams.get('address')}`);
     const markup = await htmlResponse.text();
 
     const font = {
